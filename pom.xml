@@ -96,7 +96,7 @@
 	    <repository>
 	      <id>nexus</id>
 	      <name>Landmark Technologies Releases Nexus Repository</name>
-	      <url>http://18.219.245.67:8081/repository/PayPal28/</url>
+	      <url>//http://18.191.199.47:8081/repository/PayPal-Snapshots/</url>
 	    </repository>
 	    
 	    <snapshotRepository>
