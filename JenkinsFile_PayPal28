@@ -1,0 +1,30 @@
+node{
+    def mavenHome = tool name : 'maven3.8.6'
+    stage('1CloneCode'){
+        sh "echo running a software build and deployment project for PayPal"
+        git "https://github.com/Afroella/maven-web-application"
+    }
+    stage('2Test&Build'){
+        sh "${mavenHome}/bin/mvn install"
+    }
+    stage('3CodeQuality'){
+        sh "${mavenHome}/bin/mvn sonar:sonar"   
+    }
+    stage('4UploadArtifacts'){
+        sh "${mavenHome}/bin/mvn deploy"
+    }
+    stage('5Deploy_UAT'){
+        deploy adapters: [tomcat9(credentialsId: 'Tomcat-Credentials', path: '', url: 'http://18.220.176.53:8080/')], contextPath: null, war: 'target/*war'
+    }
+    stage('7Deploy_Prod'){
+        deploy adapters: [tomcat9(credentialsId: 'Tomcat-Credentials', path: '', url: 'http://18.220.176.53:8080/')], contextPath: null, war: 'target/*war'
+    }
+    stage( '8Notification' ){
+        //Pipeline Syntax
+        emailext body: '''Build status for frontend application.
+
+Regards,
+Shoptitude Ng
+''', recipientProviders: [buildUser(), contributor(), developers()], subject: ' Build Status', to: 'paypal-team@gmail.com'
+    }
+ }
